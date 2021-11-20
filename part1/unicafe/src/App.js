@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 
 const Title = ( { text } ) => <h1>{text}</h1>
 const Button = ( { handleClick, text } ) => <button onClick={handleClick}>{text}</button>
-const Display = ( { text, count, addPercentage } ) => (
+const StatisticsLine = ( { text, value, addPercentage } ) => (
   <div>
-    {text} {isNaN(count) ? 0 : count} {addPercentage ? '%' : ''}
+    {text} {isNaN(value) ? 0 : value} {addPercentage ? '%' : ''}
   </div>
 )
 const Statistics = ( { good, neutral, bad } ) => {
@@ -15,12 +15,12 @@ const Statistics = ( { good, neutral, bad } ) => {
 
   return (
     <>
-      <Display text="good" count={good} />
-      <Display text="neutral" count={neutral} />
-      <Display text="bad" count={bad} />
-      <Display text="all" count={total_clicks()} />
-      <Display text="average" count={scored_clicks() / total_clicks()} />
-      <Display text="positive" count={good / total_clicks() * 100} addPercentage={true} />
+      <StatisticsLine text="good" value={good} />
+      <StatisticsLine text="neutral" value={neutral} />
+      <StatisticsLine text="bad" value={bad} />
+      <StatisticsLine text="all" value={total_clicks()} />
+      <StatisticsLine text="average" value={scored_clicks() / total_clicks()} />
+      <StatisticsLine text="positive" value={good / total_clicks() * 100} addPercentage={true} />
     </>
   )
 }
