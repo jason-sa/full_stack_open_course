@@ -3,9 +3,12 @@ import React, { useState } from 'react'
 const Title = ( { text } ) => <h1>{text}</h1>
 const Button = ( { handleClick, text } ) => <button onClick={handleClick}>{text}</button>
 const StatisticsLine = ( { text, value, addPercentage } ) => (
-  <div>
-    {text} {isNaN(value) ? 0 : value} {addPercentage ? '%' : ''}
-  </div>
+  <tbody>
+    <tr>
+      <td>{text}</td> 
+      <td>{isNaN(value) ? 0 : value} {addPercentage ? '%' : ''}</td>
+    </tr>
+  </tbody>
 )
 const Statistics = ( { good, neutral, bad } ) => {
   const total_clicks = () => good + neutral + bad
@@ -14,14 +17,14 @@ const Statistics = ( { good, neutral, bad } ) => {
   if (total_clicks() === 0) return <div>No feedback given</div>
 
   return (
-    <>
+    <table>
       <StatisticsLine text="good" value={good} />
       <StatisticsLine text="neutral" value={neutral} />
       <StatisticsLine text="bad" value={bad} />
       <StatisticsLine text="all" value={total_clicks()} />
       <StatisticsLine text="average" value={scored_clicks() / total_clicks()} />
       <StatisticsLine text="positive" value={good / total_clicks() * 100} addPercentage={true} />
-    </>
+    </table>
   )
 }
 
