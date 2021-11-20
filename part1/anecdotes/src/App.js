@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 const Button = ({ handleClick, text }) => (
   <button onClick={handleClick}>{text}</button>
 )
-
 const Display = ({ value }) => <div>{value}</div>
+const Title = ({ title }) => <h1>{title}</h1>
 
 const App = () => {
   const anecdotes = [
@@ -28,12 +28,20 @@ const App = () => {
     return new_votes
   }
 
+  const mostVoted = () => votes.reduce(
+    (currentMaxIndex, currentValue, currentIndex, arr ) => currentValue > arr[currentMaxIndex] ? currentIndex : currentMaxIndex, 
+    0
+    )
+
   return (
     <>
+      <Title title="Anecdote of the day" />
       <Display value={anecdotes[selected]} />
       <Display value={"has " + votes[selected] + " votes"} />
       <Button handleClick={() => setVote(voteSelected())} text="vote" />
       <Button handleClick={() => setSelected(randomSelected())} text="next anecdote" />
+      <Title title="Anecdote with most votes" />
+      <Display value={anecdotes[mostVoted()]} />
     </>
   )
 }
