@@ -11,6 +11,8 @@ const Statistics = ( { good, neutral, bad } ) => {
   const total_clicks = () => good + neutral + bad
   const scored_clicks = () => good - bad
 
+  if (total_clicks() === 0) return <div>No feedback given</div>
+
   return (
     <>
       <Display text="good" count={good} />
