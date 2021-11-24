@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import PhoneNumber from './components/PhoneNumber'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -34,38 +36,22 @@ const App = () => {
   const newNameExists = () => persons.filter(person => person.name === newName).length
   const alertNameExists = () => window.alert(`${newName} is already added to phonebook`)
 
-  const filterPhoneBook = (person) => (
-    newSearch === '' ? 
-    true 
-    : person.name.toUpperCase().includes(newSearch.toUpperCase()) 
-  )
 
 
   return (
     <div>
       <h2>Phonebook</h2>
-        <div>
-          filter shown with <input value={newSearch} onChange={handleChange(setNewSearch)} />
-        </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleChange(setNewName)} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleChange(setNewNumber)} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+        <Filter searchValue={newSearch} onChange={handleChange(setNewSearch)} />
+      <h3>add a new</h3>
+        <PersonForm onSubmit={addPerson} personInputs={
+          [
+            {text: "name:", value: newName, onChange: handleChange(setNewName)},
+            {text: "number:", value: newNumber, onChange: handleChange(setNewNumber)},
+          ]
+        } />
       <h2>Numbers</h2>
       <ul>
-        {persons.filter(
-          person => filterPhoneBook(person)
-          ).map(
-            person => <PhoneNumber key={person.id} {...person} />
-            )}
+        <Persons persons={persons} searchValue={newSearch}/>
       </ul>
     </div>
   )
