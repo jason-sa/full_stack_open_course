@@ -6,6 +6,7 @@ import axios from 'axios';
 function App() {
   const [countries, setCountries] = useState([])
   const [countrySearch, setCountrySearch] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState([])
 
   useEffect(
     () => axios.get("https://restcountries.com/v3.1/all").then(response => setCountries(response.data)),
@@ -16,16 +17,25 @@ function App() {
     defaultText: "Too many countries, specify another filter",
     defaultThreshold: 10
   }
+
+  const userCountries = selectedCountry.length ? selectedCountry : countries
+
+  const serachOnChange = event => {
+    setCountrySearch(event.target.value); 
+    setSelectedCountry([]);
+  }
+
   return (
     <div>
       <Filter 
         text="find countries" 
         searchValue={countrySearch} 
-        onChange={event => setCountrySearch(event.target.value)} 
+        onChange={serachOnChange} 
       />
       <CountryList 
-        countries={countries.filter(country => country.name.common.toUpperCase().includes(countrySearch.toUpperCase()))}
+        countries={userCountries.filter(country => country.name.common.toUpperCase().includes(countrySearch.toUpperCase()))}
         {...defaultData}
+        setCountry={setSelectedCountry}
       />
     </div>
   );

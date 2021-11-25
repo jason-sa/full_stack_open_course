@@ -16,12 +16,10 @@ const Country = ({ name, capital, population, languages, flags }) => {
     )
 }
 
-const CountryList = ({ countries, defaultText, defaultThreshold }) => {
-    console.log(countries);
-
+const CountryList = ({ countries, defaultText, defaultThreshold, setCountry }) => {
     if (countries.length > defaultThreshold) return<>{defaultText}</>
     else if (countries.length > 1) {
-        return countries.map((country, i) => <div key={i}>{country.name.common}</div>)
+        return countries.map((country, i) => <div key={i}>{country.name.common}<button onClick={() => setCountry([country])}>show</button></div>)
     }
     else if (countries.length === 1) return <Country {...countries[0]} />
 
