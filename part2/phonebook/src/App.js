@@ -31,6 +31,17 @@ const App = () => {
 
   }
 
+  const removePerson = id => {
+    window.confirm(`Delete ${persons.filter(person => person.id === id)[0].name}`)
+    personService
+      .remove(id)
+      .then(
+        () => personService
+                .getAll()
+                .then(allPersons => setPersons(allPersons))
+          )
+  }
+
   const handleChange = (setState) => (event) => setState(event.target.value)
 
   const newNameExists = () => persons.filter(person => person.name === newName).length
@@ -51,7 +62,7 @@ const App = () => {
         } />
       <h2>Numbers</h2>
       <ul>
-        <Persons persons={persons} searchValue={newSearch}/>
+        <Persons persons={persons} searchValue={newSearch} onClick={removePerson}/>
       </ul>
     </div>
   )

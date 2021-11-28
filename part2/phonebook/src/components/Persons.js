@@ -1,7 +1,7 @@
 import React from "react";
 import PhoneNumber from "./PhoneNumber";
 
-const Persons = ({ persons, searchValue }) => {
+const Persons = ({ persons, searchValue, onClick }) => {
     const filterPhoneBook = (person, searchValue) => (
         searchValue === '' ? 
         true 
@@ -11,7 +11,7 @@ const Persons = ({ persons, searchValue }) => {
     return persons.filter(
         person => filterPhoneBook(person, searchValue)
         ).map(
-          person => <PhoneNumber key={person.id} {...person} />
+          person => <PhoneNumber key={person.id} {...person} onClick={() => onClick(person.id)} />
           )
 }
 
