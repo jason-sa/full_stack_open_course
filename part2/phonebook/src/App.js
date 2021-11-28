@@ -17,18 +17,24 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (newNameExists()) {
-      alertNameExists()
-      return
-    }
+    const existingPerson = persons.filter(person => person.name === newName)
+    existingPerson.length ? updatePerson({...existingPerson[0], number: newNumber}) : insertPerson()
+  }
 
+  const updatePerson = updatedPerson => {
+    if (alertNameExists()) {
+      personService
+        .update(updatedPerson.id, updatedPerson)
+        .then(setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person)))
+    }
+  }
+  const insertPerson = () => {
     const newPerson = {
       name: newName,
       number: newNumber
     }
 
     personService.create(newPerson).then(returnedPerson => setPersons(persons.concat(returnedPerson)))
-
   }
 
   const removePerson = id => {
@@ -44,8 +50,12 @@ const App = () => {
 
   const handleChange = (setState) => (event) => setState(event.target.value)
 
-  const newNameExists = () => persons.filter(person => person.name === newName).length
-  const alertNameExists = () => window.alert(`${newName} is already added to phonebook`)
+  const alertNameExists = () => {
+    const addNumber = window.confirm(
+      `${newName} is already added to phonebook, replace the old number with a new one?`
+    )
+    return addNumber
+  }
 
 
 
