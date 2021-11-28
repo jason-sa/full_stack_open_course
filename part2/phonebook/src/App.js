@@ -10,7 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
-  const [successMessage, setSuccessMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationColor, setNotificationColor] = useState('green')
 
   useEffect(() => {
     personService.getAll().then(initialPerson => setPersons(initialPerson))
@@ -23,9 +24,12 @@ const App = () => {
     existingPerson.length ? updatePerson({...existingPerson[0], number: newNumber}) : insertPerson()
   }
 
-  const successMessageTimeout = message => {
-    setSuccessMessage(message)
-    setTimeout(() => setSuccessMessage(null), 5000)
+  const notificationMessageTimeout = message => {
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setNotificationMessage(null)
+      setNotificationColor('green')
+    }, 5000)
   }
   const updatePerson = updatedPerson => {
     if (alertNameExists()) {
@@ -34,13 +38,14 @@ const App = () => {
         .then(
           () => {
             setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person))
-            successMessageTimeout(`Updated ${updatedPerson.name} number`)
+            notificationMessageTimeout(`Updated ${updatedPerson.name} number`)
           }
         )
-
-      // setSuccessMessage()
-      // console.log(successMessage)
-      // successMessageTimeout()
+        .catch(error => {
+          setNotificationColor('red')
+          notificationMessageTimeout(`Information of ${updatedPerson.name} has already been removed from the server`)
+          setPersons(persons.filter(person => person.id !== updatedPerson.id))
+        })
     }
   }
   const insertPerson = () => {
@@ -53,7 +58,7 @@ const App = () => {
       .create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
-        successMessageTimeout(`Added ${newName}`)
+        notificationMessageTimeout(`Added ${newName}`)
       })
   }
 
@@ -82,7 +87,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-        <Notification message={successMessage} />
+        <Notification message={notificationMessage} color={notificationColor} />
         <Filter searchValue={newSearch} onChange={handleChange(setNewSearch)} />
       <h3>add a new</h3>
         <PersonForm onSubmit={addPerson} personInputs={
